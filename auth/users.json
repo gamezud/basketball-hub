@@ -1,0 +1,30 @@
+{
+  "users": [
+    {
+      "username": "admin",
+      "passwordHash": "$2b$10$pSyJYUSuy0lOxzUztP.VceAVXNhNDUCVQxKo8NVQSqMgkM/1sQz5i",
+      "roles": [
+        "admin"
+      ],
+      "groups": [
+        "ticketing"
+      ]
+    },
+    {
+      "username": "alice",
+      "passwordHash": "$2b$10$ak5jPJQ4oVe7jDK4xTNOCe4fYgI7v1SSw7fgXOCzZzk6nrA6xOiCu",
+      "roles": [
+        "user"
+      ],
+      "groups": []
+    },
+    {
+      "username": "bob",
+      "passwordHash": "$2b$10$aiP3hVhn9Q8yCyFqfimsjOB0yp7RB2VlD/wBzBaNbGxPXLmL.PYXi",
+      "roles": [
+        "user"
+      ],
+      "groups": []
+    }
+  ]
+}

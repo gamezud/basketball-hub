@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="logo-container">
+        <h3>Basketball Hub</h3>
+    </div>
+    <div id="nav"></div>
+    <div
+      style="
+        max-width: 360px;
+        margin: 24px auto;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 16px;
+      "
+    >
+      <h2>Login</h2>
+      <form id="f">
+        <input
+          name="username"
+          placeholder="username"
+          required
+          style="width: 100%; margin: 6px 0"
+        />
+        <input
+          name="password"
+          type="password"
+          placeholder="password"
+          required
+          style="width: 100%; margin: 6px 0"
+        />
+        <button style="width: 100%">Sign in</button>
+        <div id="msg" style="color: #d33; margin-top: 8px"></div>
+      </form>
+    </div>
+
+    <script src="_common.js"></script>
+    <script>
+      document.getElementById("nav").innerHTML = navBar();
+      bindLogout();
+      document.getElementById("f").onsubmit = async (e) => {
+        e.preventDefault();
+        const body = Object.fromEntries(new FormData(e.target));
+        const r = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        const d = await r.json();
+        if (!r.ok) {
+          document.getElementById("msg").textContent =
+            d.error || "Login failed";
+          return;
+        }
+        localStorage.setItem("token", d.token);
+        location.href = "index.html";
+      };
+    </script>
+  </body>
+</html>

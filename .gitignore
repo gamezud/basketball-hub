@@ -1,0 +1,5 @@
+node_modules/
+.env
+user.txt
+java-utility/target/
+.vscode/

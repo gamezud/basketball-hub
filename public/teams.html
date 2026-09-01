@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Teams</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="logo-container">
+        <img src="assets/images/logobshub.png" alt="Logo">
+        <h3>Basketball Hub</h3>
+    </div>
+    <div id="nav"></div>
+    <h1 id="teamsTitle">Teams</h1>
+    <!-- รายการทีม -->
+    <ul id="teamsList" style="display: none"></ul>
+    <!-- ส่วนจัดการทีม (เฉพาะแอดมิน) -->
+    <section id="admin" style="display: none; margin-top: 16px">
+      <h3>+ Create team (admin)</h3>
+      <form id="create" style="display: flex; gap: 8px; align-items: center">
+        <input name="name" placeholder="Team name" required />
+        <input name="city" placeholder="City" />
+        <input name="short_code" placeholder="Code e.g. LAL" required />
+        <button>Create</button>
+      </form>
+      <ul id="manageList" style="margin-top: 12px"></ul>
+    </section>
+    <script src="_common.js"></script>
+
+    <script>
+      // navbar
+      document.getElementById("nav").innerHTML = navBar("teams");
+      bindLogout();
+
+      // Gate for guests — ซ่อนทุกอย่าง (รวม H1) แล้วโชว์ข้อความ
+      if (!me()) {
+        [...document.body.children].forEach((el) => {
+          if (el.id === "nav") return;
+          el.style.display = "none";
+        });
+        document.body.insertAdjacentHTML(
+          "beforeend",
+          `<div class="guest-message" style="padding:16px;color:#444;margin-top:8px">
+         ต้องเข้าสู่ระบบก่อนเพื่อดูข้อมูล
+       </div>`
+        );
+        throw new Error("GUEST_BLOCKED_TEAMS");
+      }
+
+      // ====== สำหรับผู้ใช้ที่ล็อกอินแล้ว ======
+      const isAd = isAdmin();
+
+      // แสดงรายการทีม (ถูกตั้ง display:none ไว้ใน HTML)
+      const listEl = document.getElementById("teamsList");
+      listEl.style.display = ""; // ← เปิดให้แสดง
+
+      // เปิดส่วนจัดการทีมถ้าเป็นแอดมิน
+      if (isAd) document.getElementById("admin").style.display = "block";
+
+      // helpers
+      async function fetchJSON(url, opt = {}) {
+        const r = await fetch(url, opt);
+        if (!r.ok) {
+          let msg = `HTTP ${r.status}`;
+          try {
+            msg = (await r.json()).error || msg;
+          } catch {}
+          const e = new Error(msg);
+          e.status = r.status;
+          throw e;
+        }
+        try {
+          return await r.json();
+        } catch {
+          return null;
+        }
+      }
+
+      // โหลดรายการทีม (ทั้ง list บน และรายการลบของแอดมินด้านล่าง)
+      async function loadTeams() {
+        const teams = await fetchJSON("/api/teams");
+
+        listEl.innerHTML =
+          (teams || [])
+            .map(
+              (t) =>
+                `<li>${t.name} (${t.short_code || ""}) — ${t.city || ""}</li>`
+            )
+            .join("") || "<li><em>No teams</em></li>";
+
+        if (isAd) {
+          document.getElementById("manageList").innerHTML =
+            (teams || [])
+              .map(
+                (t) => `<li>
+                  ${t.name} (${t.short_code || ""}) — ${t.city || ""}
+                  <button data-del="${
+                    t.id
+                  }" style="margin-left:8px">Delete</button>
+                </li>`
+              )
+              .join("") || "<li><em>No teams</em></li>";
+        }
+      }
+      loadTeams();
+
+      // create team (admin)
+      const form = document.getElementById("create");
+      if (form) {
+        form.onsubmit = async (e) => {
+          e.preventDefault();
+          const body = Object.fromEntries(new FormData(e.target));
+          try {
+            await fetchJSON("/api/teams", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", ...authHeaders() },
+              body: JSON.stringify(body),
+            });
+            e.target.reset();
+            await loadTeams();
+          } catch (err) {
+            alert(err.message);
+          }
+        };
+      }
+
+      // delete team (admin)
+      document.addEventListener("click", async (e) => {
+        const id = e.target?.dataset?.del;
+        if (!id) return;
+        if (!confirm("Delete this team?")) return;
+        try {
+          await fetchJSON(`/api/teams/${Number(id)}`, {
+            method: "DELETE",
+            headers: { ...authHeaders() },
+          });
+          await loadTeams(); // อัปเดตทั้งส่วนบน/ล่าง
+        } catch (err) {
+          alert(err.message);
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <title>My Tickets — Basketball Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="icon" type="image/png" href="images/bshub-logo.png">
+    <style>
+        .logo-container {
+            display: flex;
+            align-items: center;
+            /* จัดให้อยู่กลางแนวตั้ง */
+        }
+        
+        .logo-container img {
+            width: 60px;
+            /* กำหนดขนาดโลโก้ */
+            margin-right: 10px;
+            /* ระยะห่างระหว่างโลโก้กับตัวอักษร */
+        }
+        
+        .muted {
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+        
+        .box {
+            border: 1px solid #e6e6e6;
+            border-radius: 8px;
+            padding: 8px;
+            margin: 8px 0;
+        }
+        
+        .row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin: 6px 0;
+        }
+        
+        .pill {
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: #eee;
+            font-size: 12px;
+        }
+        
+        nav {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        button[disabled] {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="logo-container">
+        <img src="assets/images/logobshub.png" alt="Logo">
+        <h3>Basketball Hub</h3>
+    </div>
+    <div id="nav"></div>
+
+    <div class="card">
+      <div class="row">
+        <label for="eventId"><strong>Event ID:</strong></label>
+        <input id="eventId" value="11" size="6" />
+        <button id="searchBtn">Search</button>
+      </div>
+      <div id="eventInfo" class="muted"></div>
+    </div>
+
+    <div class="card">
+      <h3>My Orders for this Event</h3>
+      <div id="myOrders"></div>
+    </div>
+
+    <div class="card">
+      <h3>My Tickets (Paid)</h3>
+      <div id="paidTickets"></div>
+    </div>
+
+    <script src="_common.js"></script>
+    <script>
+      // ---------- small helpers ----------
+      function n2(x) {
+        return Number(x || 0);
+      }
+      function money(x) {
+        return n2(x).toFixed(2);
+      }
+
+      // ใส่ Nav + สถานะผู้ใช้
+      document.getElementById("nav").innerHTML = navBar("mytickets");
+      bindLogout();
+      if (!me()) {
+        // ต้องล็อกอินก่อนใช้งาน
+        alert("ต้องเข้าสู่ระบบก่อนใช้งาน My Tickets");
+        location.href = "login.html";
+      }
+
+      // ---------- UI refs ----------
+      const eventInfo = document.getElementById("eventInfo");
+      const myOrdersBox = document.getElementById("myOrders");
+      const paidBox = document.getElementById("paidTickets");
+      const eventInput = document.getElementById("eventId");
+
+      // ---------- data loaders ----------
+      async function loadEventInfoById(eventId) {
+        const e = await fetchJSON(`/api/events/${eventId}`);
+        if (!e) {
+          eventInfo.textContent = "No event found";
+          return null;
+        }
+
+        // พยายามเรียก matches/:id ถ้า backend ไม่มีให้ fallback เป็น /matches แล้ว find
+        let m = null;
+        try {
+          m = await fetchJSON(`/api/matches/${e.match_id}`);
+        } catch {
+          const all = await fetchJSON(`/api/matches`);
+          m = all.find((x) => x.id === e.match_id);
+        }
+
+        eventInfo.innerHTML =
+          `Event #${e.id} for Match #${e.match_id} — ` +
+          (m
+            ? `${m.home_name} vs ${m.away_name} @ ${m.venue || "-"} (${new Date(
+                m.tipoff_at
+              ).toLocaleString()})`
+            : "") +
+          `<br>Sales: ${
+            e.sales_open_at ? new Date(e.sales_open_at).toLocaleString() : "-"
+          } → ${
+            e.sales_close_at ? new Date(e.sales_close_at).toLocaleString() : "-"
+          }`;
+
+        return e;
+      }
+
+      async function loadMyOrdersForEvent(eventId) {
+        myOrdersBox.innerHTML = "Loading...";
+        try {
+          const data = await fetchJSON(`/api/my/orders?eventId=${eventId}`, {
+            headers: { ...authHeaders() },
+          });
+
+          // โชว์เฉพาะ pending เท่านั้น
+          const rows = (data || []).filter((g) => g.order.status === "pending");
+
+          myOrdersBox.innerHTML =
+            rows
+              .map(
+                (g) => `
+        <div class="box">
+          <div>
+            <strong>Order #${g.order.id}</strong> —
+            total: ${Number(g.order.total || 0).toFixed(2)} —
+            status: ${g.order.status} —
+            created: ${new Date(g.order.created_at).toLocaleString()}
+          </div>
+          <div>
+            Items: ${
+              (g.items || [])
+                .map(
+                  (i) =>
+                    `${i.section}-${i.row_label}-${i.seat_number} (${Number(
+                      i.price || 0
+                    ).toFixed(2)})`
+                )
+                .join(", ") || "-"
+            }
+          </div>
+          <div style="margin-top:6px">
+            <button data-act="my-pay" data-id="${
+              g.order.id
+            }">Mark as Paid</button>
+            <button data-act="my-cancel" data-id="${
+              g.order.id
+            }">Cancel this order</button>
+          </div>
+        </div>
+      `
+              )
+              .join("") || "<em>No pending orders</em>";
+        } catch (e) {
+          myOrdersBox.innerHTML = `<span style="color:#d33">${e.message}</span>`;
+        }
+      }
+
+      async function loadPaidTickets() {
+        const rows = await fetchJSON("/api/my/tickets", {
+          headers: { ...authHeaders() },
+        });
+
+        const byOrder = {};
+        for (const r of rows) {
+          if (!byOrder[r.order_id]) {
+            byOrder[r.order_id] = {
+              order_id: r.order_id,
+              tipoff_at: r.tipoff_at,
+              venue: r.venue,
+              home_name: r.home_name,
+              away_name: r.away_name,
+              items: [],
+              total: 0,
+            };
+          }
+          byOrder[r.order_id].items.push(
+            `${r.section}-${r.row_label}-${r.seat_number} (${Number(
+              r.price
+            ).toFixed(2)})`
+          );
+          byOrder[r.order_id].total += Number(r.price); // << แปลงเป็น Number เสมอ
+        }
+
+        const list = Object.values(byOrder);
+        const box = document.getElementById("paidTickets"); // << ใช้กล่องนี้
+        box.innerHTML =
+          list
+            .map(
+              (t) => `
+      <div class="box">
+        <div><strong>Order #${t.order_id}</strong> — ${t.home_name} vs ${
+                t.away_name
+              } @ ${t.venue} — ${new Date(t.tipoff_at).toLocaleString()}</div>
+        <div>Seat: ${t.items.join(", ")}</div>
+        <div class="muted">Total: ${t.total.toFixed(2)}</div>
+      </div>
+    `
+            )
+            .join("") || "<em>No paid tickets</em>";
+      }
+
+      // ---------- actions ----------
+      async function doSearch() {
+        const id = Number(eventInput.value);
+        if (!id) {
+          eventInfo.textContent = "กรอก Event ID ให้ถูกต้อง";
+          return;
+        }
+        const e = await loadEventInfoById(id);
+        if (!e) return;
+        await loadMyOrdersForEvent(e.id);
+        await loadPaidTickets();
+      }
+
+      document.getElementById("searchBtn").onclick = doSearch;
+
+      // delegate ปุ่ม Mark as Paid / Cancel
+      document.addEventListener("click", async (ev) => {
+        const act = ev.target?.dataset?.act;
+        if (!act) return;
+
+        const orderId = Number(ev.target.dataset.id);
+        if (!orderId) return;
+
+        if (act === "my-pay") {
+          try {
+            await fetchJSON(`/api/my/orders/${orderId}/pay`, {
+              method: "POST",
+              headers: { ...authHeaders() },
+            });
+            // เอากล่องของออร์เดอร์นี้ออกทันที
+            ev.target.closest(".box")?.remove();
+            // รีเฟรชตั๋วที่จ่ายแล้วให้เห็นใบที่เพิ่งจ่าย
+            await loadPaidTickets();
+          } catch (e) {
+            alert(e.message);
+          }
+        }
+
+        if (act === "my-cancel") {
+          if (!confirm(`Cancel order #${orderId}?`)) return;
+          try {
+            await fetchJSON(`/api/my/orders/${orderId}/cancel`, {
+              method: "POST",
+              headers: { ...authHeaders() },
+            });
+            ev.target.closest(".box")?.remove();
+            // ยกเลิกแล้วไม่ต้องไปเพิ่มที่ Paid ก็พอ
+          } catch (e) {
+            alert(e.message);
+          }
+        }
+      });
+
+      // ---------- initial ----------
+      doSearch(); // โหลดทันทีด้วยค่าเริ่มต้นในช่อง Event ID
+    </script>
+  </body>
+</html>

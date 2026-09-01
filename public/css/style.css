@@ -1,0 +1,271 @@
+/* ================= Fonts ================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;600;700&display=swap');
+
+/* ================= Root Variables ================= */
+
+:root {
+    --gap: 12px;
+    --main-bg: #F5F5F5;
+    /* พื้นหลังเว็บสีเทาอ่อน */
+    --nav-bg: #222222;
+    /* navbar / แถบบนสีดำอ่อน */
+    --card-bg: #FFFFFF;
+    /* card สีขาว */
+    --header-bg: #222222;
+    /* แถบ header / title สีดำอ่อน */
+    --accent: #e92828;
+    /* สีตัวอักษรเมนูแดงอ่อน */
+    --text-primary: #333333;
+    /* ตัวอักษรหลักสบายตา */
+    --text-muted: #555555;
+    /* ตัวอักษรรอง */
+    --nav-accent-bar: #d43c3c;
+    /* แถบตัด navbar สีแดงอ่อน */
+    --padding-page: 16px;
+    /* padding รอบหน้าเว็บ */
+}
+
+
+/* ================= Body ================= */
+
+body {
+    font-family: "Roboto Condensed", sans-serif;
+    margin: 0;
+    padding-left: var(--padding-page);
+    padding-right: var(--padding-page);
+    background-color: var(--main-bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+
+/* ================= Navbar ================= */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background-color: var(--nav-bg);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 4px solid var(--nav-accent-bar);
+    /* แถบสีตัด */
+}
+
+.navbar .logo {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.navbar ul {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: var(--accent);
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.navbar ul li a:hover,
+.navbar ul li a.active {
+    color: #FFFFFF;
+}
+
+
+/* Toggle menu สำหรับ mobile */
+
+.menu-toggle {
+    display: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--accent);
+}
+
+
+/* ================= Card ================= */
+
+.card {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 12px 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+
+/* ================= Buttons ================= */
+
+button {
+    background-color: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* ================= Layout Flex/Grid ================= */
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap);
+}
+
+.col {
+    flex: 1 1 200px;
+}
+
+
+/* ================= Responsive ================= */
+
+@media (max-width: 1024px) {
+    .navbar ul {
+        gap: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar ul {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 60%;
+        height: 100%;
+        background-color: var(--nav-bg);
+        flex-direction: column;
+        padding-top: 80px;
+        padding-left: 24px;
+        gap: 20px;
+        transition: 0.3s;
+        z-index: 999;
+        border-left: 3px solid var(--accent);
+    }
+    .navbar ul.show {
+        right: 0;
+    }
+    .menu-toggle {
+        display: block;
+    }
+    .row {
+        flex-direction: column;
+    }
+    body {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        margin: 8px 0;
+        padding: 16px;
+    }
+    button {
+        width: 100%;
+    }
+}
+
+
+/* ================= Standings Table ================= */
+
+.standings-header {
+    background-color: var(--header-bg);
+    color: #FFFFFF;
+    padding: 12px 16px;
+    border-radius: 8px 8px 0 0;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.standings-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0;
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+}
+
+.standings-table th,
+.standings-table td {
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+.standings-table th {
+    background-color: #f0f0f0;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.standings-table tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.standings-table tr:hover {
+    background-color: #f2f2f2;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #060606;
+}
+
+#fixtures div {
+    background-color: #2b2b2b;
+    color: #fff;
+    border: 1px solid rgba(255, 140, 0, 0.3);
+}
+
+#fixtures div span {
+    color: #f5f5f5;
+}
+
+#fixtures div:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+}
+
+.logo-container {
+            display: flex;
+            align-items: center;
+            /* จัดให้อยู่กลางแนวตั้ง */
+        }
+        
+.logo-container img {
+            width: 60px;
+            /* กำหนดขนาดโลโก้ */
+            margin-right: 10px;
+            /* ระยะห่างระหว่างโลโก้กับตัวอักษร */
+        }
+
+
+
+section {
+    flex: 1;
+}
