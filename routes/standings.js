@@ -1,6 +1,8 @@
 // routes/standings.js
 const express = require('express');
 const pool = require('../db');
+const { requireAuth } = require('../middleware/auth');
+const { hasRole } = require('../middleware/rbac');
 const router = express.Router();
 
 /* ====== ฟังก์ชันคำนวณ standings ใหม่ ====== */
@@ -85,7 +87,7 @@ router.get('/', async (_req, res) => {
 });
 
 // POST /api/standings/recompute (เรียกเองได้เวลาอยากบังคับ refresh)
-router.post('/recompute', async (_req, res, next) => {
+router.post('/recompute', requireAuth, hasRole('admin'), async (_req, res, next) => {
   try {
     await recomputeStandings();
     res.json({ ok: true });

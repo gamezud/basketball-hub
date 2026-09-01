@@ -40,50 +40,6 @@ CREATE TABLE IF NOT EXISTS standings (
   win_pct NUMERIC(5,3) DEFAULT 0
 );
 
--- recompute-standings
-WITH agg AS (
-  SELECT team_id,
-         COUNT(*) AS gp,
-         SUM(win) AS wins,
-         SUM(loss) AS losses,
-         SUM(pf) AS pf,
-         SUM(pa) AS pa
-  FROM (
-    SELECT m.home_id AS team_id, 1,
-           CASE WHEN m.home_score > m.away_score THEN 1 ELSE 0 END,
-           CASE WHEN m.home_score < m.away_score THEN 1 ELSE 0 END,
-           m.home_score, m.away_score
-    FROM matches m WHERE m.status='finished'
-    UNION ALL
-    SELECT m.away_id AS team_id, 1,
-           CASE WHEN m.away_score > m.home_score THEN 1 ELSE 0 END,
-           CASE WHEN m.away_score < m.home_score THEN 1 ELSE 0 END,
-           m.away_score, m.home_score
-    FROM matches m WHERE m.status='finished'
-  ) x
-  GROUP BY team_id
-)
-INSERT INTO standings (team_id, games_played, wins, losses, points_for, points_against, win_pct)
-SELECT
-  t.id,
-  COALESCE(a.gp, 0),
-  COALESCE(a.wins, 0),
-  COALESCE(a.losses, 0),
-  COALESCE(a.pf, 0),
-  COALESCE(a.pa, 0),
-  CASE WHEN COALESCE(a.gp,0) > 0
-       THEN ROUND((a.wins::NUMERIC)/a.gp, 3)
-       ELSE 0 END
-FROM teams t
-LEFT JOIN agg a ON a.team_id = t.id
-ON CONFLICT (team_id) DO UPDATE
-SET games_played   = EXCLUDED.games_played,
-    wins           = EXCLUDED.wins,
-    losses         = EXCLUDED.losses,
-    points_for     = EXCLUDED.points_for,
-    points_against = EXCLUDED.points_against,
-    win_pct        = EXCLUDED.win_pct;
-
 -- TICKETING
 CREATE TABLE IF NOT EXISTS event (
   id SERIAL PRIMARY KEY,

@@ -20,7 +20,7 @@ router.post('/', requireAuth, hasRole('admin'), async (req, res) => {
 });
 
 // DELETE /api/teams/:id  — ลบทีมได้ต่อเมื่อไม่มีแมตช์อ้างอิง
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', requireAuth, hasRole('admin'), async (req, res, next) => {
   const id = Number(req.params.id);
   try {
     // กันลบถ้ายังอยู่ในแมตช์
