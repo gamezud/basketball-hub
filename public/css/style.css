@@ -1,271 +1,406 @@
-/* ================= Fonts ================= */
+/* ============================================================
+   Basketball Hub — Design tokens & base styles
+   ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;600;700&display=swap');
-
-/* ================= Root Variables ================= */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@600;700&display=swap');
+html {
+  scrollbar-gutter: stable;
+}
 
 :root {
-    --gap: 12px;
-    --main-bg: #F5F5F5;
-    /* พื้นหลังเว็บสีเทาอ่อน */
-    --nav-bg: #222222;
-    /* navbar / แถบบนสีดำอ่อน */
-    --card-bg: #FFFFFF;
-    /* card สีขาว */
-    --header-bg: #222222;
-    /* แถบ header / title สีดำอ่อน */
-    --accent: #e92828;
-    /* สีตัวอักษรเมนูแดงอ่อน */
-    --text-primary: #333333;
-    /* ตัวอักษรหลักสบายตา */
-    --text-muted: #555555;
-    /* ตัวอักษรรอง */
-    --nav-accent-bar: #d43c3c;
-    /* แถบตัด navbar สีแดงอ่อน */
-    --padding-page: 16px;
-    /* padding รอบหน้าเว็บ */
+  /* --- Color: มีความหมาย ไม่ใช่แค่ชื่อสี --- */
+  --surface:        #ffffff;   /* พื้นการ์ด */
+  --surface-page:   #f4f5f7;   /* พื้นหลังหน้า */
+  --surface-sunken: #eceef1;   /* พื้นที่ยุบลงไป เช่น หัวตาราง */
+
+  --ink:            #1a1d21;   /* ตัวอักษรหลัก */
+  --ink-muted:      #5c6470;   /* ตัวอักษรรอง */
+  --ink-inverse:    #ffffff;
+
+  --line:           #dfe2e7;   /* เส้นขอบ */
+
+  --primary:        #1b2a4a;   /* การกระทำหลัก + navbar */
+  --primary-hover:  #263a63;
+  --primary-soft:   #e8ecf4;   /* พื้นอ่อนของ primary */
+
+  --danger:         #c62828;   /* ทำลาย ย้อนไม่ได้ — สงวนไว้เท่านั้น */
+  --danger-hover:   #a51f1f;
+
+  --success:        #2e7d32;   /* ยืนยัน / ที่นั่งว่าง */
+  --success-hover:  #256428;
+
+  --disabled:       #b0b6bf;   /* ปิดใช้งาน / ขายแล้ว */
+
+  --accent:         #e8590c;   /* เน้นเฉพาะจุด (แถบใต้ navbar) */
+
+  /* --- Spacing scale: ใช้แค่ 6 ค่านี้ทั้งเว็บ --- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+
+  /* --- Type scale --- */
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.5rem;
+  --text-2xl:  2rem;
+
+  --radius:    8px;
+  --radius-sm: 6px;
+  --shadow:    0 1px 3px rgba(16, 24, 40, .08);
+  --shadow-md: 0 4px 12px rgba(16, 24, 40, .10);
+
+  --container: 1120px;
 }
 
+/* ================= Base ================= */
 
-/* ================= Body ================= */
+* { box-sizing: border-box; }
 
 body {
-    font-family: "Roboto Condensed", sans-serif;
-    margin: 0;
-    padding-left: var(--padding-page);
-    padding-right: var(--padding-page);
-    background-color: var(--main-bg);
-    color: var(--text-primary);
-    line-height: 1.6;
+  margin: 0 auto;
+  max-width: var(--container);
+  padding: 0 var(--sp-4) var(--sp-6);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               "Helvetica Neue", sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--surface-page);
 }
 
+h1, h2, h3, h4 {
+  font-family: "Roboto Condensed", sans-serif;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 var(--sp-4);
+  line-height: 1.25;
+}
+
+h1 { font-size: var(--text-2xl); }
+h2 { font-size: var(--text-xl); }
+h3 { font-size: var(--text-lg); }
+h4 { font-size: var(--text-base); }
 
 /* ================= Navbar ================= */
 
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 24px;
-    background-color: var(--nav-bg);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    border-bottom: 4px solid var(--nav-accent-bar);
-    /* แถบสีตัด */
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  padding: var(--sp-3) var(--sp-4);
+  margin: var(--sp-3) 0 var(--sp-5);
+  background: var(--primary);
+  border-bottom: 3px solid var(--accent);
+  border-radius: var(--radius);
+  position: sticky;
+  top: var(--sp-2);
+  z-index: 100;
+  box-shadow: var(--shadow-md);
 }
 
-.navbar .logo {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--accent);
+.navbar .brand {
+  font-family: "Roboto Condensed", sans-serif;
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--ink-inverse);
+  margin-right: var(--sp-2);
+  white-space: nowrap;
 }
 
-.navbar ul {
-    display: flex;
-    gap: 24px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+.navbar a {
+  color: rgba(255, 255, 255, .78);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  padding: var(--sp-1) 0;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
 }
 
-.navbar ul li a {
-    text-decoration: none;
-    color: var(--accent);
-    font-weight: 600;
-    transition: 0.3s;
+.navbar a:hover { color: var(--ink-inverse); }
+
+.navbar a.active {
+  color: var(--ink-inverse);
+  border-bottom-color: var(--accent);
 }
 
-.navbar ul li a:hover,
-.navbar ul li a.active {
-    color: #FFFFFF;
+.navbar .spacer { flex: 1; }
+
+.pill {
+  display: inline-block;
+  padding: var(--sp-1) var(--sp-3);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .12);
+  color: rgba(255, 255, 255, .9);
+  font-size: var(--text-sm);
+  white-space: nowrap;
 }
 
-
-/* Toggle menu สำหรับ mobile */
-
-.menu-toggle {
-    display: none;
-    font-size: 28px;
-    cursor: pointer;
-    color: var(--accent);
+/* ปุ่มรองที่อยู่บนพื้นเข้มของ navbar ต้องกลับสีให้อ่านออก */
+.navbar .btn-secondary,
+.navbar #logoutBtn {
+  color: rgba(255, 255, 255, .9);
+  background: transparent;
+  border-color: rgba(255, 255, 255, .35);
 }
-
-
-/* ================= Card ================= */
-
-.card {
-    background-color: var(--card-bg);
-    padding: 20px;
-    border-radius: 10px;
-    margin: 12px 0;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+.navbar .btn-secondary:hover,
+.navbar #logoutBtn:hover {
+  color: var(--ink-inverse);
+  background: rgba(255, 255, 255, .12);
+  border-color: rgba(255, 255, 255, .6);
 }
-
 
 /* ================= Buttons ================= */
+/* ค่าเริ่มต้น = primary  •  ใส่ class เมื่อต้องการระดับอื่น */
 
-button {
-    background-color: var(--accent);
-    color: #fff;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.25s;
+button, .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-4);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink-inverse);
+  background: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s;
 }
 
-button:hover {
-    opacity: 0.85;
+button:hover, .btn:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
 }
 
-button[disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
+button:focus-visible, .btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
-
-/* ================= Layout Flex/Grid ================= */
-
-.row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--gap);
+/* รอง — ใช้กับการกระทำที่ไม่ใช่ทางหลักของหน้า */
+.btn-secondary {
+  color: var(--primary);
+  background: transparent;
+  border-color: var(--line);
+}
+.btn-secondary:hover {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
-.col {
-    flex: 1 1 200px;
+/* ทำลาย — สงวนไว้สำหรับสิ่งที่ย้อนไม่ได้เท่านั้น */
+.btn-danger {
+  background: var(--danger);
+  border-color: var(--danger);
+}
+.btn-danger:hover {
+  background: var(--danger-hover);
+  border-color: var(--danger-hover);
 }
 
-
-/* ================= Responsive ================= */
-
-@media (max-width: 1024px) {
-    .navbar ul {
-        gap: 16px;
-    }
+/* ยืนยัน */
+.btn-success {
+  background: var(--success);
+  border-color: var(--success);
+}
+.btn-success:hover {
+  background: var(--success-hover);
+  border-color: var(--success-hover);
 }
 
-@media (max-width: 768px) {
-    .navbar ul {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 60%;
-        height: 100%;
-        background-color: var(--nav-bg);
-        flex-direction: column;
-        padding-top: 80px;
-        padding-left: 24px;
-        gap: 20px;
-        transition: 0.3s;
-        z-index: 999;
-        border-left: 3px solid var(--accent);
-    }
-    .navbar ul.show {
-        right: 0;
-    }
-    .menu-toggle {
-        display: block;
-    }
-    .row {
-        flex-direction: column;
-    }
-    body {
-        padding-left: 12px;
-        padding-right: 12px;
-    }
+button[disabled], .btn[disabled] {
+  background: var(--disabled) !important;
+  border-color: var(--disabled) !important;
+  color: #fff !important;
+  cursor: not-allowed;
 }
 
-@media (max-width: 480px) {
-    .card {
-        margin: 8px 0;
-        padding: 16px;
-    }
-    button {
-        width: 100%;
-    }
+.navbar .btn,
+.navbar button {
+  min-height: 38px;
 }
 
+/* ================= Cards ================= */
 
-/* ================= Standings Table ================= */
+.card,
+.box,
+.order-card,
+#fixtures > div,
+#list > div[data-id] {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--sp-4);
+  margin-bottom: var(--sp-3);
+  box-shadow: var(--shadow);
+}
+
+.card { margin-bottom: var(--sp-4); }
+
+/* ================= Fixture / match rows ================= */
+
+#fixtures, #list { margin: 0 0 var(--sp-5); }
+
+#fixtures > div,
+#list > div[data-id] {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  transition: box-shadow .15s, transform .15s;
+}
+
+#fixtures > div:hover,
+#list > div[data-id]:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+#fixtures span:first-child { color: var(--ink-muted); font-size: var(--text-sm); }
+
+/* ================= Seats ================= */
+
+#seats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-4);
+}
+
+#seats button {
+  min-width: 128px;
+  background: var(--success);
+  border-color: var(--success);
+  font-variant-numeric: tabular-nums;
+}
+#seats button:hover:not([disabled]) {
+  background: var(--success-hover);
+  border-color: var(--success-hover);
+}
+#seats button[disabled] { text-decoration: line-through; }
+
+/* ================= Forms ================= */
+
+label { font-size: var(--text-sm); font-weight: 600; color: var(--ink); }
+
+input, select, textarea {
+  padding: var(--sp-2) var(--sp-3);
+  font: inherit;
+  font-size: var(--text-sm);
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  align-items: center;
+  margin-bottom: var(--sp-4);
+}
+
+/* ================= Layout helpers ================= */
+
+.row { display: flex; flex-wrap: wrap; gap: var(--sp-3); align-items: center; }
+.col { flex: 1 1 200px; }
+.muted { color: var(--ink-muted); font-size: var(--text-sm); }
+
+.guest-message {
+  max-width: 480px;
+  margin: var(--sp-6) auto;
+  padding: var(--sp-5);
+  text-align: center;
+  color: var(--ink-muted);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* ================= Standings table ================= */
 
 .standings-header {
-    background-color: var(--header-bg);
-    color: #FFFFFF;
-    padding: 12px 16px;
-    border-radius: 8px 8px 0 0;
-    font-weight: 600;
-    font-size: 1.1rem;
+  padding: var(--sp-3) var(--sp-4);
+  font-family: "Roboto Condensed", sans-serif;
+  font-weight: 700;
+  color: var(--ink-inverse);
+  background: var(--primary);
+  border-radius: var(--radius) var(--radius) 0 0;
 }
 
 .standings-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 0;
-    border-radius: 0 0 8px 8px;
-    overflow: hidden;
-}
-
-.standings-table th,
-.standings-table td {
-    border: 1px solid #ddd;
-    padding: 8px 12px;
-    text-align: center;
-    font-size: 0.95rem;
-    color: var(--text-primary);
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
 }
 
 .standings-table th {
-    background-color: #f0f0f0;
-    font-weight: 600;
-    color: var(--accent);
+  padding: var(--sp-3) var(--sp-2);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-align: center;
+  color: var(--ink-inverse);
+  background: var(--primary);
 }
 
-.standings-table tr:nth-child(even) {
-    background-color: #fafafa;
+.standings-table td {
+  padding: var(--sp-3) var(--sp-2);
+  font-size: var(--text-sm);
+  text-align: center;
+  color: var(--ink);
+  border-top: 1px solid var(--line);
+  font-variant-numeric: tabular-nums;
 }
 
-.standings-table tr:hover {
-    background-color: #f2f2f2;
+.standings-table td:nth-child(2) { text-align: left; font-weight: 600; }
+.standings-table tbody tr:hover { background: var(--surface-sunken); }
+
+/* ================= Details (admin order log) ================= */
+
+details {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  margin-bottom: var(--sp-2);
+}
+details summary {
+  padding: var(--sp-3) var(--sp-4);
+  cursor: pointer;
+  font-size: var(--text-sm);
 }
 
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #060606;
-}
+/* ================= Responsive ================= */
 
-#fixtures div {
-    background-color: #2b2b2b;
-    color: #fff;
-    border: 1px solid rgba(255, 140, 0, 0.3);
-}
-
-#fixtures div span {
-    color: #f5f5f5;
-}
-
-#fixtures div:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
-}
-
-.logo-container {
-            display: flex;
-            align-items: center;
-            /* จัดให้อยู่กลางแนวตั้ง */
-        }
-        
-.logo-container img {
-            width: 60px;
-            /* กำหนดขนาดโลโก้ */
-            margin-right: 10px;
-            /* ระยะห่างระหว่างโลโก้กับตัวอักษร */
-        }
-
-
-
-section {
-    flex: 1;
+@media (max-width: 768px) {
+  body { padding: 0 var(--sp-3) var(--sp-5); }
+  .navbar { gap: var(--sp-3); padding: var(--sp-3); }
+  .navbar .spacer { display: none; }
+  .row { flex-direction: column; align-items: stretch; }
+  form { flex-direction: column; align-items: stretch; }
+  form input, form select, form button, form textarea { width: 100%; }
+  #fixtures > div, #list > div[data-id] { flex-direction: column; align-items: flex-start; gap: var(--sp-1); }
+  #seats button { flex: 1 1 calc(50% - var(--sp-2)); min-width: 0; }
+  .standings-table th, .standings-table td { padding: var(--sp-2) var(--sp-1); font-size: 0.8rem; }
 }

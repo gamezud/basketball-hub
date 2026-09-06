@@ -5,111 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Standings</title>
     <link rel="stylesheet" href="css/style.css" />
-    <style>
-        .logo-container {
-            display: flex;
-            align-items: center;
-            /* จัดให้อยู่กลางแนวตั้ง */
-        }
-        
-        .logo-container img {
-            width: 60px;
-            /* กำหนดขนาดโลโก้ */
-            margin-right: 10px;
-            /* ระยะห่างระหว่างโลโก้กับตัวอักษร */
-        }
-        /* --- General --- */
-        
-        body {
-            margin: 0;
-            font-family: "Roboto Condensed", sans-serif;
-            background-color: #f5f5f5;
-            /* พื้นหลังสีเทาอ่อน */
-            color: #333;
-            padding: 16px;
-        }
-        
-        h1 {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-        
-        .guest-message {
-            padding: 16px;
-            color: #444;
-            margin-top: 16px;
-            text-align: center;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-        }
-        /* --- Table --- */
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-        }
-        
-        thead {
-            background-color: #353333;
-            color: #ffffff;
-            /* ตัวอักษรแดงอ่อน */
-        }
-        
-        th,
-        td {
-            padding: 12px 8px;
-            text-align: center;
-            border-bottom: 1px solid #ffffff;
-        }
-        
-        th {
-            font-weight: 600;
-        }
-        
-        tr:nth-child(even) {
-            background-color: #fafafa;
-        }
-        
-        tr:hover {
-            background-color: orangered;
-        }
-        /* --- Responsive --- */
-        
-        @media (max-width: 768px) {
-            th,
-            td {
-                padding: 8px 4px;
-                font-size: 0.85rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            body {
-                padding: 12px;
-            }
-            h1 {
-                font-size: 1.4rem;
-            }
-            table {
-                font-size: 0.8rem;
-            }
-        }
-    </style>
   </head>
-  <body>
-    <div class="logo-container">
-        <h3>Basketball Hub</h3>
-    </div>
-    <div id="nav"></div>
 
+  <body>
+
+    <div id="nav"></div>
     <main id="standingsPane">
-      <h1>Standings</h1>
-      <table id="standingsTable">
+      <h2>Standings</h2>
+      <table id="standingsTable" class="standings-table">
         <thead>
           <tr>
             <th>#</th>

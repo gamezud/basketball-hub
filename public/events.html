@@ -1,78 +1,14 @@
 <!DOCTYPE html>
 <html lang="th">
-  <head>
+<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Events & Ticketing</title>
     <link rel="stylesheet" href="css/style.css" />
-    <style>
-        /* ===== Layout ===== */
-        #seats button { background:#2e7d32; }
-        #seats button[disabled] { background:#9e9e9e; opacity:1; }
-        .logo-container {
-            display: flex;
-            align-items: center;
-            /* จัดให้อยู่กลางแนวตั้ง */
-        }
-        
-        .logo-container img {
-            width: 60px;
-            /* กำหนดขนาดโลโก้ */
-            margin-right: 10px;
-            /* ระยะห่างระหว่างโลโก้กับตัวอักษร */
-        }
-        
-        .row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .card {
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 12px;
-            margin: 10px 0;
-        }
-        
-        button[disabled] {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .guest-message {
-            padding: 16px;
-            color: #444;
-            margin-top: 16px;
-            text-align: center;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-        }
-        
-        .order-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            margin: 8px 0;
-            padding: 8px;
-        }
-        
-        details summary {
-            padding: 6px 8px;
-            cursor: pointer;
-        }
-        
-        #seats button {
-            margin: 4px;
-        }
-    </style>
-  </head>
-  <body>
-    <div class="logo-container">
-        <h3>Basketball Hub</h3>
-    </div>
-    <div id="nav"></div>
+</head>
 
+  <body>
+    <div id="nav"></div>
     <section class="card">
       <h2>Find Event by Match</h2>
       <div class="row">
@@ -411,7 +347,7 @@
                     g.order.status === "pending"
                       ? `
                          <!-- <button data-act="ad-mark-paid" data-id="${g.order.id}">Mark as Paid</button> -->
-                         <button data-act="ad-cancel" data-id="${g.order.id}">Cancel order</button>`
+                         <button data-act="btn-danger" data-id="${g.order.id}">Cancel order</button>`
                       : ""
                   }
                   ${
@@ -419,7 +355,7 @@
                       ? (g.items || [])
                           .map(
                             (i) =>
-                              `<button data-act="ad-release" data-oid="${g.order.id}" data-seat="${i.seat_id}">Release ${i.seat_id}</button>`
+                              `<button data-act="btn-secondary" data-oid="${g.order.id}" data-seat="${i.seat_id}">Release ${i.seat_id}</button>`
                           )
                           .join(" ")
                       : ""
@@ -475,7 +411,7 @@
               }
             }
 
-            if (t.dataset.act === "ad-cancel") {
+            if (t.dataset.act === "btn-danger") {
   const id = Number(t.dataset.id);
   if (!confirm(`Cancel order #${id}?`)) return;
   try {
@@ -498,7 +434,7 @@
   }
 }
 
-            if (t.dataset.act === "ad-release") {
+            if (t.dataset.act === "btn-secondary") {
               const oid = Number(t.dataset.oid);
               const seatId = Number(t.dataset.seat);
               if (!confirm(`Release seat ${seatId} from order #${oid}?`))
@@ -563,7 +499,7 @@
                     .join(", ") || "-"
                 }</div>
                 <div style="margin-top:6px">
-                  <button data-act="my-cancel" data-id="${
+                  <button data-act="btn-danger" data-id="${
                     g.order.id
                   }">Cancel this order</button>
                 </div>
@@ -579,7 +515,7 @@
       // delegate: cancel (user)
 if (loggedIn && !amAdmin) {
   document.addEventListener("click", async (e) => {
-    if (e.target.dataset.act !== "my-cancel") return;
+    if (e.target.dataset.act !== "btn-danger") return;
     const orderId = Number(e.target.dataset.id);
     if (!confirm(`Cancel order #${orderId}?`)) return;
     try {

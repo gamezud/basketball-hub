@@ -1,100 +1,15 @@
 <!doctype html>
 <html lang="th">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Basketball Hub</title>
     <link rel="stylesheet" href="css/style.css" />
-    <style>
-        .logo-container {
-            display: flex;
-            align-items: center;
-            /* จัดให้อยู่กลางแนวตั้ง */
-        }
-        
-        .logo-container img {
-            width: 60px;
-            /* กำหนดขนาดโลโก้ */
-            margin-right: 10px;
-            /* ระยะห่างระหว่างโลโก้กับตัวอักษร */
-        }
-        
-        body {
-            height: 100%;
-        }
-        
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background: linear-gradient(180deg, #ffffff 0%, #ffffff 100%);
-        }
-        
-        body {
-            margin: 0;
-            font-family: "Roboto Condensed", sans-serif;
-            background: linear-gradient(180deg, #ffffff 0%, #ffffff 100%);
-            color: #000000;
-            padding: 16px;
-        }
-        
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #000000;
-        }
-        
-        #fixtures {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        
-        #fixtures div {
-            background-color: #fff;
-            margin-bottom: 12px;
-            padding: 14px 18px;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
-        
-        #fixtures div:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        #fixtures div span {
-            display: inline-block;
-            margin-right: 12px;
-            color: #555;
-        }
-        /* Responsive */
-        
-        @media(max-width: 768px) {
-            #fixtures div {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            #fixtures div span {
-                margin-bottom: 4px;
-            }
-        }
-    </style>
 </head>
 
 <body>
-    <div class="logo-container">
-        <h3>Basketball Hub</h3>
-    </div>
-    <!-- -->
-    <!-- <h1>Basketball Hub</h1> -->
     <div id="nav">
     </div>
-
     <h2>Matches</h2>
     <div id="fixtures"></div>
 

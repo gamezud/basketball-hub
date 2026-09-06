@@ -7,16 +7,13 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <div class="logo-container">
-        <h3>Basketball Hub</h3>
-    </div>
     <div id="nav"></div>
-    <h1 id="teamsTitle">Teams</h1>
+    <h2 id="teamsTitle">Teams</h2>
     <!-- รายการทีม -->
     <ul id="teamsList" style="display: none"></ul>
     <!-- ส่วนจัดการทีม (เฉพาะแอดมิน) -->
     <section id="admin" style="display: none; margin-top: 16px">
-      <h3>+ Create team (admin)</h3>
+      <h2>Create team</h2>
       <form id="create" style="display: flex; gap: 8px; align-items: center">
         <input name="name" placeholder="Team name" required />
         <input name="city" placeholder="City" />
@@ -40,9 +37,7 @@
         });
         document.body.insertAdjacentHTML(
           "beforeend",
-          `<div class="guest-message" style="padding:16px;color:#444;margin-top:8px">
-         ต้องเข้าสู่ระบบก่อนเพื่อดูข้อมูล
-       </div>`
+          `<div class="guest-message">ต้องเข้าสู่ระบบก่อนเพื่อดูข้อมูล</div>`
         );
         throw new Error("GUEST_BLOCKED_TEAMS");
       }

@@ -29,7 +29,6 @@ function navBar(active) {
   const loggedIn = !!t;
   const user = loggedIn ? me() : null;
 
-  // ✅ เอา players.html ออกได้ตรงนี้
   const links = [
     ['index.html', 'Home'],
     ['teams.html', 'Teams'],
@@ -37,29 +36,26 @@ function navBar(active) {
     ['events.html', 'Events'],
     ['standings.html', 'Standings']
   ];
-
-  // ✅ เพิ่ม My Tickets เฉพาะตอนล็อกอิน
   if (loggedIn) links.push(['ticket.html', 'My Tickets']);
 
-  // ✅ วาด nav bar
   const navLinks = links.map(([href, label]) => {
-    const style = active === label.toLowerCase() ? 'style="font-weight:700"' : '';
-    return `<a href="${href}" ${style}>${label}</a>`;
-  }).join('\n');
+    const cls = active === label.toLowerCase() ? ' class="active"' : '';
+    return `<a href="${href}"${cls}>${label}</a>`;
+  }).join('');
 
-  // ✅ ส่วนสถานะ login/logout
   const userInfo = loggedIn
     ? `${user.sub} (${(user.roles || []).join('|') || 'user'})`
     : 'guest';
 
   const authControl = loggedIn
-    ? '<button id="logoutBtn">Logout</button>'
-    : '<a href="login.html">Login</a>';
+    ? '<button id="logoutBtn" class="btn-secondary">Logout</button>'
+    : '<a href="login.html" class="btn btn-secondary">Login</a>';
 
   return `
-    <nav style="display:flex;gap:14px;align-items:center;margin-bottom:14px">
+    <nav class="navbar">
+      <span class="brand">Basketball Hub</span>
       ${navLinks}
-      <span style="flex:1"></span>
+      <span class="spacer"></span>
       <span id="who" class="pill">${userInfo}</span>
       ${authControl}
     </nav>
